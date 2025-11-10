@@ -1,4 +1,6 @@
 import 'package:blog_app/core/color/app_color.dart';
+import 'package:blog_app/core/common/widgets/loader.dart';
+import 'package:blog_app/core/common/widgets/snackbar.dart';
 import 'package:blog_app/core/font/app_font.dart';
 import 'package:blog_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:blog_app/features/auth/presentation/widgets/auth_field.dart';
@@ -34,36 +36,51 @@ class _SignupPageState extends State<SignupPage> {
 
               Text('Sign Up.', style: AppFonts.bold58()),
               SizedBox(height: size.height * 0.02),
-              Form(
-                key: key,
-                child: Column(
-                  children: [
-                    AuthField(hintText: 'Name', controller: nameController),
-                    SizedBox(height: size.height * 0.02),
-                    AuthField(hintText: 'Email', controller: emailController),
-                    SizedBox(height: size.height * 0.02),
-                    AuthField(
-                      hintText: 'Password',
-                      controller: passwordController,
+              BlocConsumer<AuthBloc, AuthState>(
+                listener: (context, state) {
+                  if (state is AuthFailure) {
+                    showSnackBar(context, state.message);
+                  }
+                },
+                builder: (context, state) {
+                  if (state is AuthLoading) {
+                    return Loader();
+                  }
+                  return Form(
+                    key: key,
+                    child: Column(
+                      children: [
+                        AuthField(hintText: 'Name', controller: nameController),
+                        SizedBox(height: size.height * 0.02),
+                        AuthField(
+                          hintText: 'Email',
+                          controller: emailController,
+                        ),
+                        SizedBox(height: size.height * 0.02),
+                        AuthField(
+                          hintText: 'Password',
+                          controller: passwordController,
+                        ),
+                        SizedBox(height: size.height * 0.06),
+                        AuthGradientButton(
+                          buttonText: 'Sign Up',
+                          onPressed: () {
+                            if (key.currentState!.validate()) {
+                              context.read<AuthBloc>().add(
+                                AuthSignUp(
+                                  email: emailController.text.trim(),
+                                  password: passwordController.text.trim(),
+                                  name: nameController.text.trim(),
+                                ),
+                              );
+                            }
+                          },
+                        ),
+                        SizedBox(height: size.height * 0.02),
+                      ],
                     ),
-                    SizedBox(height: size.height * 0.06),
-                    AuthGradientButton(
-                      buttonText: 'Sign Up',
-                      onPressed: () {
-                        if (key.currentState!.validate()) {
-                          context.read<AuthBloc>().add(
-                            AuthSignUp(
-                              email: emailController.text.trim(),
-                              password: passwordController.text.trim(),
-                              name: nameController.text.trim(),
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                    SizedBox(height: size.height * 0.02),
-                  ],
-                ),
+                  );
+                },
               ),
               GestureDetector(
                 onTap: () {

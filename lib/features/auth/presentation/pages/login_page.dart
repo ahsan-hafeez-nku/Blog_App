@@ -1,9 +1,13 @@
 import 'package:blog_app/core/color/app_color.dart';
+import 'package:blog_app/core/common/widgets/loader.dart';
+import 'package:blog_app/core/common/widgets/snackbar.dart';
 import 'package:blog_app/core/font/app_font.dart';
 import 'package:blog_app/core/routes/routes_endpoints.dart';
+import 'package:blog_app/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:blog_app/features/auth/presentation/widgets/auth_field.dart';
 import 'package:blog_app/features/auth/presentation/widgets/auth_gradient_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class LoginPage extends StatefulWidget {
@@ -32,22 +36,49 @@ class _LoginPageState extends State<LoginPage> {
 
               Text('Sign In.', style: AppFonts.bold58()),
               SizedBox(height: size.height * 0.02),
-              Form(
-                key: key,
-                child: Column(
-                  children: [
-                    SizedBox(height: size.height * 0.02),
-                    AuthField(hintText: 'Email', controller: emailController),
-                    SizedBox(height: size.height * 0.02),
-                    AuthField(
-                      hintText: 'Password',
-                      controller: passwordController,
+              BlocConsumer<AuthBloc, AuthState>(
+                listener: (context, state) {
+                  if (state is AuthFailure) {
+                    return showSnackBar(context, state.message);
+                  }
+                },
+                builder: (context, state) {
+                  if (state is AuthLoading) {
+                    return Loader();
+                  }
+                  return Form(
+                    key: key,
+                    child: Column(
+                      children: [
+                        SizedBox(height: size.height * 0.02),
+                        AuthField(
+                          hintText: 'Email',
+                          controller: emailController,
+                        ),
+                        SizedBox(height: size.height * 0.02),
+                        AuthField(
+                          hintText: 'Password',
+                          controller: passwordController,
+                        ),
+                        SizedBox(height: size.height * 0.06),
+                        AuthGradientButton(
+                          buttonText: 'Sign In',
+                          onPressed: () {
+                            if (key.currentState!.validate()) {
+                              context.read<AuthBloc>().add(
+                                AuthSignIn(
+                                  email: emailController.text.trim(),
+                                  password: passwordController.text.trim(),
+                                ),
+                              );
+                            }
+                          },
+                        ),
+                        SizedBox(height: size.height * 0.02),
+                      ],
                     ),
-                    SizedBox(height: size.height * 0.06),
-                    AuthGradientButton(buttonText: 'Sign In', onPressed: () {}),
-                    SizedBox(height: size.height * 0.02),
-                  ],
-                ),
+                  );
+                },
               ),
               GestureDetector(
                 onTap: () {

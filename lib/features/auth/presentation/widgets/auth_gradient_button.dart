@@ -1,13 +1,16 @@
 import 'package:blog_app/core/color/app_color.dart';
+import 'package:blog_app/core/common/widgets/loader.dart';
 import 'package:flutter/material.dart';
 
 class AuthGradientButton extends StatelessWidget {
   final String buttonText;
   final VoidCallback onPressed;
+  final bool loading;
   const AuthGradientButton({
     super.key,
     required this.buttonText,
     required this.onPressed,
+    this.loading = false,
   });
 
   @override
@@ -32,10 +35,15 @@ class AuthGradientButton extends StatelessWidget {
           backgroundColor: AppColors.transparentColor,
           shadowColor: AppColors.transparentColor,
         ),
-        child: Text(
-          buttonText,
-          style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
-        ),
+        child: loading
+            ? const Loader()
+            : Text(
+                buttonText,
+                style: const TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
       ),
     );
   }

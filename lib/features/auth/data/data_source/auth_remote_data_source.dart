@@ -31,8 +31,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         throw ServerException(message: 'User not found!');
       }
       return UserModel.fromJson(response.user!.toJson());
+    } on AuthException catch (e) {
+      throw ServerException(message: e.message);
     } catch (e) {
-      throw ServerException(message: e.toString());
+      throw ServerException(message: 'Unexpected error');
     }
   }
 
@@ -52,8 +54,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         throw ServerException(message: 'Failed to get the User');
       }
       return UserModel.fromJson(response.user!.toJson());
+    } on AuthException catch (e) {
+      throw ServerException(message: e.message);
     } catch (e) {
-      throw ServerException(message: e.toString());
+      throw ServerException(message: 'Unexpected error');
     }
   }
 }

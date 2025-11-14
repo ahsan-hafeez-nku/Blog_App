@@ -1,5 +1,6 @@
+import 'dart:developer';
+
 import 'package:blog_app/core/color/app_color.dart';
-import 'package:blog_app/core/common/widgets/loader.dart';
 import 'package:blog_app/core/common/widgets/snackbar.dart';
 import 'package:blog_app/core/font/app_font.dart';
 import 'package:blog_app/core/routes/routes_endpoints.dart';
@@ -39,13 +40,17 @@ class _LoginPageState extends State<LoginPage> {
               BlocConsumer<AuthBloc, AuthState>(
                 listener: (context, state) {
                   if (state is AuthFailure) {
+                    log(state.message);
                     return showSnackBar(context, state.message);
+                  }
+                  if (state is AuthSuccess) {
+                    return showSnackBar(context, state.user.id.toString());
                   }
                 },
                 builder: (context, state) {
-                  if (state is AuthLoading) {
-                    return Loader();
-                  }
+                  // if (state is AuthLoading) {
+                  //   return Loader();
+                  // }
                   return Form(
                     key: key,
                     child: Column(
@@ -62,6 +67,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         SizedBox(height: size.height * 0.06),
                         AuthGradientButton(
+                          loading: state is AuthLoading ? true : false,
                           buttonText: 'Sign In',
                           onPressed: () {
                             if (key.currentState!.validate()) {

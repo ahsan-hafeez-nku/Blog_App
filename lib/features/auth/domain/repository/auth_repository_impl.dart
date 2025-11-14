@@ -44,9 +44,9 @@ class AuthRepositoryImpl implements AuthRepository {
       final user = await fn();
       return right(user);
     } on AuthException catch (e) {
-      return left(Failure(e.toString()));
+      return left(Failure(e.message));
     } on ServerException catch (e) {
-      return left(Failure(e.toString()));
+      return left(Failure(e.message));
     }
   }
 }

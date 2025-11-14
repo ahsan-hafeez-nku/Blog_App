@@ -1,5 +1,4 @@
 import 'package:blog_app/core/color/app_color.dart';
-import 'package:blog_app/core/common/widgets/loader.dart';
 import 'package:blog_app/core/common/widgets/snackbar.dart';
 import 'package:blog_app/core/font/app_font.dart';
 import 'package:blog_app/features/auth/presentation/bloc/auth_bloc.dart';
@@ -43,9 +42,6 @@ class _SignupPageState extends State<SignupPage> {
                   }
                 },
                 builder: (context, state) {
-                  if (state is AuthLoading) {
-                    return Loader();
-                  }
                   return Form(
                     key: key,
                     child: Column(
@@ -63,6 +59,7 @@ class _SignupPageState extends State<SignupPage> {
                         ),
                         SizedBox(height: size.height * 0.06),
                         AuthGradientButton(
+                          loading: state is AuthLoading ? true : false,
                           buttonText: 'Sign Up',
                           onPressed: () {
                             if (key.currentState!.validate()) {

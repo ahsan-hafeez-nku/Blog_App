@@ -50,11 +50,13 @@ class _SignupPageState extends State<SignupPage> {
                         SizedBox(height: size.height * 0.02),
                         AuthField(
                           hintText: 'Email',
+                          type: 'email',
                           controller: emailController,
                         ),
                         SizedBox(height: size.height * 0.02),
                         AuthField(
                           hintText: 'Password',
+                          type: 'password',
                           controller: passwordController,
                         ),
                         SizedBox(height: size.height * 0.06),

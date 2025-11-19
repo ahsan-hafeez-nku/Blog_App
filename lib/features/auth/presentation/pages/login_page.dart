@@ -48,9 +48,6 @@ class _LoginPageState extends State<LoginPage> {
                   }
                 },
                 builder: (context, state) {
-                  // if (state is AuthLoading) {
-                  //   return Loader();
-                  // }
                   return Form(
                     key: key,
                     child: Column(

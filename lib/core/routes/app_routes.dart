@@ -1,7 +1,11 @@
 // core/routes/app_router.dart
+import 'package:blog_app/core/common/cubit/app_user_cubit/app_user_cubit.dart';
 import 'package:blog_app/core/routes/routes_endpoints.dart';
 import 'package:blog_app/features/auth/presentation/pages/login_page.dart';
 import 'package:blog_app/features/auth/presentation/pages/signup_page.dart';
+import 'package:blog_app/features/blog/presentation/pages/add_new_blog_page.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 final GoRouter appRouter = GoRouter(
@@ -9,7 +13,19 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: RouteEndpoints.login,
       name: 'login',
-      builder: (context, state) => const LoginPage(),
+      builder: (context, state) =>
+          BlocSelector<AppUserCubit, AppUserState, bool>(
+            selector: (state) {
+              return state is AppUserLoggedIn ? true : false;
+            },
+            builder: (context, isLoggedIn) {
+              if (isLoggedIn) {
+                return const LoginPage();
+              } else {
+                return AddNewBlogPage();
+              }
+            },
+          ),
     ),
     GoRoute(
       path: RouteEndpoints.signUp,

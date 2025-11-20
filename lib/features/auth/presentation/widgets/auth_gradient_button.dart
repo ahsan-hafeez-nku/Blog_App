@@ -1,5 +1,5 @@
 import 'package:blog_app/core/color/app_color.dart';
-import 'package:blog_app/core/common/widgets/loader.dart';
+import 'package:blog_app/core/utils/loader.dart';
 import 'package:flutter/material.dart';
 
 class AuthGradientButton extends StatelessWidget {

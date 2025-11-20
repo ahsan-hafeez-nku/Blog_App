@@ -74,14 +74,28 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit,
   ) async {
     try {
+      // Set checking state (shows splash screen)
+      _appUserCubit.setChecking();
+      
       final res = await _currentUser.call(NoParams());
-      res.fold((l) => emit(AuthFailure(l.message)), (user) {
-        log("User Email: ${user.email}");
-        _emitAuthSuccess(user, emit);
-      });
+      res.fold(
+        (l) {
+          // User not logged in - clear checking state
+          _appUserCubit.updateUser(null);
+          emit(AuthFailure(l.message));
+        },
+        (user) {
+          log("User Email: ${user.email}");
+          _emitAuthSuccess(user, emit);
+        },
+      );
     } on AuthApiException catch (e) {
+      // User not logged in - clear checking state
+      _appUserCubit.updateUser(null);
       emit(AuthFailure(e.statusCode.toString()));
     } catch (e) {
+      // User not logged in - clear checking state
+      _appUserCubit.updateUser(null);
       emit(AuthFailure("Something went wrong"));
     }
   }

@@ -13,6 +13,13 @@ class AppTheme {
       color: WidgetStatePropertyAll(AppColors.backgroundColor),
       side: BorderSide.none,
     ),
+    iconTheme: const IconThemeData(color: AppColors.greyColor),
+    iconButtonTheme: IconButtonThemeData(
+      style: ButtonStyle(
+        backgroundColor: WidgetStatePropertyAll(AppColors.backgroundColor),
+        iconColor: WidgetStatePropertyAll(AppColors.greyColor),
+      ),
+    ),
     inputDecorationTheme: InputDecorationTheme(
       contentPadding: const EdgeInsets.all(27),
       border: _border(),

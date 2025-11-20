@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:blog_app/core/color/app_color.dart';
-import 'package:blog_app/core/common/widgets/snackbar.dart';
+import 'package:blog_app/core/utils/snackbar.dart';
 import 'package:blog_app/core/font/app_font.dart';
 import 'package:blog_app/core/routes/routes_endpoints.dart';
 import 'package:blog_app/features/auth/presentation/bloc/auth_bloc.dart';

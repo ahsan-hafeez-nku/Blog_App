@@ -6,6 +6,7 @@ import 'package:blog_app/core/utils/image_picker.dart';
 import 'package:blog_app/features/blog/presentation/widgets/blog_editor.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AddNewBlogPage extends StatefulWidget {
@@ -42,7 +43,12 @@ class _AddNewBlogPageState extends State<AddNewBlogPage> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          leading: Icon(Icons.arrow_back_ios),
+          leading: IconButton(
+            onPressed: () {
+              context.pop();
+            },
+            icon: Icon(Icons.arrow_back_ios),
+          ),
           actions: [IconButton(onPressed: () {}, icon: Icon(Icons.check))],
         ),
 

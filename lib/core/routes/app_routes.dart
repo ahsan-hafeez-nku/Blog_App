@@ -5,13 +5,13 @@ import 'package:blog_app/core/routes/routes_endpoints.dart';
 import 'package:blog_app/features/auth/presentation/pages/login_page.dart';
 import 'package:blog_app/features/auth/presentation/pages/signup_page.dart';
 import 'package:blog_app/features/blog/presentation/pages/add_new_blog_page.dart';
+import 'package:blog_app/features/blog/presentation/pages/blog_page.dart';
 import 'package:blog_app/init_dependencies.dart';
 import 'package:go_router/go_router.dart';
 
 final _authRefreshNotifier = AuthRefreshNotifier(
   serviceLocator<AppUserCubit>(),
 );
-
 final GoRouter appRouter = GoRouter(
   initialLocation: RouteEndpoints.splash,
   refreshListenable: _authRefreshNotifier,
@@ -20,16 +20,37 @@ final GoRouter appRouter = GoRouter(
     final isLoggedIn = _authRefreshNotifier.isLoggedIn;
     final currentLocation = state.matchedLocation;
 
-    if (isChecking && currentLocation != RouteEndpoints.splash) {
+    // If checking auth state, show splash
+    if (isChecking) {
       return RouteEndpoints.splash;
     }
+
+    // After checking is done
     if (!isChecking) {
+      // If on splash, redirect based on auth state
+      if (currentLocation == RouteEndpoints.splash) {
+        return isLoggedIn ? RouteEndpoints.home : RouteEndpoints.login;
+      }
+
+      // Protect authenticated routes
       if (isLoggedIn) {
-        return RouteEndpoints.home;
+        // User is logged in, check if they're trying to access auth pages
+        if (currentLocation == RouteEndpoints.login ||
+            currentLocation == RouteEndpoints.signUp) {
+          return RouteEndpoints.home;
+        }
+        // Allow navigation to any other route
+        return null;
       } else {
-        return RouteEndpoints.login;
+        // User is not logged in, redirect to login unless already on auth pages
+        if (currentLocation != RouteEndpoints.login &&
+            currentLocation != RouteEndpoints.signUp) {
+          return RouteEndpoints.login;
+        }
+        return null;
       }
     }
+
     return null;
   },
 
@@ -51,13 +72,16 @@ final GoRouter appRouter = GoRouter(
     ),
     GoRoute(
       path: RouteEndpoints.home,
+      name: 'home',
+      builder: (context, state) => const BlogPage(),
+    ),
+    GoRoute(
+      path: RouteEndpoints.addBlogScreen,
       name: 'addNewBlog',
       builder: (context, state) => const AddNewBlogPage(),
     ),
   ],
 );
-
-
 /*
 Action	Method	Description
 1. Navigate to a new screen (replace current route)	context.go('/signup')	Replaces current route (like Navigator.pushReplacement)

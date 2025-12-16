@@ -13,17 +13,24 @@ class BlogPage extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              // context.push(RouteEndpoints.addBlogScreen);
               context.push(RouteEndpoints.addBlogScreen);
             },
             icon: Icon(Icons.add_circle_outline_outlined),
           ),
         ],
       ),
+      body: SafeArea(
+        child: Column(
+          children: [
+            ListView.builder(
+              itemBuilder: (context, index) {
+                return Container();
+                // return BlogCard(blog:);
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
-
-              // Navigator.of(context).push(
-              //   MaterialPageRoute(builder: (context) => const AddNewBlogPage()),
-              // );

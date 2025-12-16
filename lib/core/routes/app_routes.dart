@@ -57,27 +57,27 @@ final GoRouter appRouter = GoRouter(
   routes: [
     GoRoute(
       path: RouteEndpoints.splash,
-      name: 'splash',
+      name: RouteEndpoints.splashName,
       builder: (context, state) => const SplashPage(),
     ),
     GoRoute(
       path: RouteEndpoints.login,
-      name: 'login',
+      name: RouteEndpoints.loginName,
       builder: (context, state) => const LoginPage(),
     ),
     GoRoute(
       path: RouteEndpoints.signUp,
-      name: 'signup',
+      name: RouteEndpoints.signUpName,
       builder: (context, state) => const SignupPage(),
     ),
     GoRoute(
       path: RouteEndpoints.home,
-      name: 'home',
+      name: RouteEndpoints.homeName,
       builder: (context, state) => const BlogPage(),
     ),
     GoRoute(
       path: RouteEndpoints.addBlogScreen,
-      name: 'addNewBlog',
+      name: RouteEndpoints.addBlogScreenName,
       builder: (context, state) => const AddNewBlogPage(),
     ),
   ],

@@ -21,29 +21,23 @@ class BlogRepositoryImpl implements BlogRepository {
     required List<String> topics,
   }) async {
     try {
-      // Generate UUID for the blog
       final blogId = const Uuid().v1();
-
-      // Extract file extension from the image
       final fileExt = image.path.split('.').last;
-
-      // Create filename with extension
-      final imageFileName = '$blogId.$fileExt'; // e.g., "uuid.jpg"
+      final imageFileName = '$blogId.$fileExt';
 
       BlogModel blog = BlogModel(
         id: blogId,
         posterId: posterId,
         title: title,
         content: content,
-        imageUrl: '', // Will be updated after upload
+        imageUrl: '',
         topics: topics,
         updatedAt: DateTime.now(),
       );
 
       final imageUrl = await blogRemoteDataSource.uploadBlogImage(
         image: image,
-        blog: blog,
-        fileName: imageFileName, // Pass the filename with extension
+        filePath: imageFileName,
       );
 
       blog = blog.copyWith(imageUrl: imageUrl);

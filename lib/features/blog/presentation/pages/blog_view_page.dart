@@ -62,20 +62,22 @@ class _BlogViewPageState extends State<BlogViewPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        controller: _scrollController,
-        slivers: [
-          BlogSliverAppBar(blog: widget.blog, showTitle: _showTitle),
-          SliverToBoxAdapter(
-            child: FadeTransition(
-              opacity: _fadeAnimation,
-              child: SlideTransition(
-                position: _slideAnimation,
-                child: BlogContentSection(blog: widget.blog),
+      body: SafeArea(
+        child: CustomScrollView(
+          controller: _scrollController,
+          slivers: [
+            BlogSliverAppBar(blog: widget.blog, showTitle: _showTitle),
+            SliverToBoxAdapter(
+              child: FadeTransition(
+                opacity: _fadeAnimation,
+                child: SlideTransition(
+                  position: _slideAnimation,
+                  child: BlogContentSection(blog: widget.blog),
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

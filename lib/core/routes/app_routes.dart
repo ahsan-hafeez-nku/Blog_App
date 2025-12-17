@@ -4,8 +4,10 @@ import 'package:blog_app/core/routes/auth_refresh_notifier.dart';
 import 'package:blog_app/core/routes/routes_endpoints.dart';
 import 'package:blog_app/features/auth/presentation/pages/login_page.dart';
 import 'package:blog_app/features/auth/presentation/pages/signup_page.dart';
+import 'package:blog_app/features/blog/domain/entity/blog_entity.dart';
 import 'package:blog_app/features/blog/presentation/pages/add_new_blog_page.dart';
 import 'package:blog_app/features/blog/presentation/pages/blog_page.dart';
+import 'package:blog_app/features/blog/presentation/pages/blog_view_page.dart';
 import 'package:blog_app/init_dependencies.dart';
 import 'package:go_router/go_router.dart';
 
@@ -79,6 +81,15 @@ final GoRouter appRouter = GoRouter(
       path: RouteEndpoints.addBlogScreen,
       name: RouteEndpoints.addBlogScreenName,
       builder: (context, state) => const AddNewBlogPage(),
+    ),
+    GoRoute(
+      path: RouteEndpoints.blogViewerScreen,
+      name: RouteEndpoints.blogViewerScreenName,
+
+      builder: (context, state) {
+        BlogEntity blog = state.extra as BlogEntity;
+        return BlogViewPage(blog: blog);
+      },
     ),
   ],
 );

@@ -1,4 +1,5 @@
 import 'package:blog_app/core/color/app_color.dart';
+import 'package:blog_app/core/routes/routes_endpoints.dart';
 import 'package:blog_app/core/utils/snackbar.dart';
 import 'package:blog_app/core/font/app_font.dart';
 import 'package:blog_app/features/auth/presentation/bloc/auth_bloc.dart';
@@ -39,6 +40,9 @@ class _SignupPageState extends State<SignupPage> {
                 listener: (context, state) {
                   if (state is AuthFailure) {
                     showSnackBar(context, state.message);
+                  }
+                  if (state is AuthSuccess) {
+                    context.goNamed(RouteEndpoints.homeName);
                   }
                 },
                 builder: (context, state) {

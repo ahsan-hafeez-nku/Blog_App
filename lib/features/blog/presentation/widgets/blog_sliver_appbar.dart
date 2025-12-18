@@ -58,6 +58,8 @@ class BlogSliverAppBar extends StatelessWidget {
                 );
 
                 if (shouldDelete == true) {
+                  if (!context.mounted) return;
+
                   context.read<BlogBloc>().add(
                     DeleteBlogFromDB(blogId: blog.id),
                   );

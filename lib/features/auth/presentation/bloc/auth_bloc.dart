@@ -5,6 +5,7 @@ import 'package:blog_app/core/error/auth_api_exception.dart';
 import 'package:blog_app/core/usecase/usecase.dart';
 import 'package:blog_app/core/entities/user_entity.dart';
 import 'package:blog_app/features/auth/domain/usercase/current_user.dart';
+import 'package:blog_app/features/auth/domain/usercase/logout_user.dart';
 import 'package:blog_app/features/auth/domain/usercase/user_sign_in.dart';
 import 'package:blog_app/features/auth/domain/usercase/user_sign_up.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,6 +16,7 @@ part 'auth_state.dart';
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final UserSignUp _userSignUp;
   final UserSignIn _userSignIn;
+  final UserLogout _userLogout;
   final CurrentUser _currentUser;
   final AppUserCubit _appUserCubit;
   AuthBloc({
@@ -22,14 +24,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     required UserSignIn userSignIn,
     required CurrentUser currentUser,
     required AppUserCubit appUserCubit,
+    required UserLogout userLogout,
   }) : _userSignUp = userSignUp,
        _userSignIn = userSignIn,
        _currentUser = currentUser,
        _appUserCubit = appUserCubit,
+       _userLogout = userLogout,
        super(AuthInitial()) {
     on<AuthEvent>((_, emit) => emit(AuthLoading()));
     on<AuthSignUp>(_onSignUpEvent);
     on<AuthSignIn>(_onSignInEvent);
+    on<AuthUserLogout>(_onLogoutEvent);
     on<AuthIsUserLoggedIn>(_onUserLoggedInEvent);
   }
   void _onSignUpEvent(AuthSignUp event, Emitter<AuthState> emit) async {
@@ -69,18 +74,46 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
+  void _onLogoutEvent(AuthUserLogout event, Emitter<AuthState> emit) async {
+    try {
+      final res = await _userLogout.call(NoParams());
+
+      res.fold(
+        (failure) {
+          emit(AuthFailure(failure.message));
+        },
+        (_) {
+          // ✅ Clear user from AppUserCubit on successful logout
+          _appUserCubit.updateUser(null);
+          emit(AuthLogoutSuccess());
+        },
+      );
+    } on AuthApiException catch (e) {
+      emit(AuthFailure(e.statusCode.toString()));
+    } catch (e) {
+      emit(AuthFailure("Something went wrong"));
+    }
+  }
+
   void _onUserLoggedInEvent(
     AuthIsUserLoggedIn event,
     Emitter<AuthState> emit,
   ) async {
     try {
-      // Set checking state (shows splash screen)
-      _appUserCubit.setChecking();
-      
+      if (_appUserCubit.state is! AppUserChecking) {
+        _appUserCubit.setChecking();
+      }
+      final startTime = DateTime.now();
+
       final res = await _currentUser.call(NoParams());
+      final elapsed = DateTime.now().difference(startTime);
+      final minDelay = const Duration(milliseconds: 3000);
+      if (elapsed < minDelay) {
+        await Future.delayed(minDelay - elapsed);
+      }
+
       res.fold(
         (l) {
-          // User not logged in - clear checking state
           _appUserCubit.updateUser(null);
           emit(AuthFailure(l.message));
         },

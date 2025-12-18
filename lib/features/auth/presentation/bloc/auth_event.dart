@@ -20,3 +20,7 @@ class AuthSignIn extends AuthEvent {
 class AuthIsUserLoggedIn extends AuthEvent {
   AuthIsUserLoggedIn();
 }
+
+class AuthUserLogout extends AuthEvent {
+  AuthUserLogout();
+}

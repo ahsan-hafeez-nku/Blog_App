@@ -14,4 +14,5 @@ abstract interface class AuthRepository {
   });
 
   Future<Either<Failure, UserEntity>> currentUser();
+  Future<Either<Failure, Unit>> logout();
 }

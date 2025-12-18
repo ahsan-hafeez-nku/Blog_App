@@ -131,16 +131,16 @@ class _AddNewBlogPageState extends State<AddNewBlogPage> {
         ],
       ),
       body: SafeArea(
-         child: BlocConsumer<BlogBloc, BlogState>(
-           listener: (context, state) {
-             if (state is BlogUploadSuccess) {
-               showSnackBar(context, 'Blog uploaded successfully!');
-               // ✅ Just navigate back, blog_page will handle the refresh
-               context.goNamed('home');
-             } else if (state is BlogFailure) {
-               showSnackBar(context, state.message);
-             }
-           },
+        child: BlocConsumer<BlogBloc, BlogState>(
+          listener: (context, state) {
+            if (state is BlogUploadSuccess) {
+              showSnackBar(context, 'Blog uploaded successfully!');
+              context.goNamed('home');
+            } else if (state is BlogFailure) {
+              log('Failure in BlogBloc: ${state.message}');
+              showSnackBar(context, state.message);
+            }
+          },
           builder: (context, state) {
             return AbsorbPointer(
               absorbing: state is BlogLoading,
